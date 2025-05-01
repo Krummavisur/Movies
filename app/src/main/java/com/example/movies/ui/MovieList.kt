@@ -33,7 +33,6 @@ fun MovieListScreen(){
     ) {
      item {
             MovieItem(
-                movie =
             )
         }
     }
