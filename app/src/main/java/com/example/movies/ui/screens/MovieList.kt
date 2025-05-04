@@ -1,4 +1,4 @@
-package com.example.movies.ui
+package com.example.movies.ui.screens
 
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.items
@@ -34,9 +34,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
 import com.example.movies.model.Movie
-import com.example.movies.moviesList.MoviesListViewModel
-import com.example.movies.moviesList.MoviesUiState
-import com.example.movies.moviesList.MoviesViewModelFactory
 
 @Composable
 fun MovieListScreen() {
@@ -95,7 +92,7 @@ fun MovieItem(movie: Movie) {
                 contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.width(16.dp)) // ← Исправлено!
+            Spacer(modifier = Modifier.width(16.dp))
 
             Column(
                 modifier = Modifier.fillMaxHeight(),
