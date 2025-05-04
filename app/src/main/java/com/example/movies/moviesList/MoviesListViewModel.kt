@@ -13,25 +13,25 @@ class MoviesListViewModel(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<Movie>>> = _uiState
+    private val _uiState = MutableStateFlow<MoviesUiState>(MoviesUiState.Loading)
+    val uiState: StateFlow<MoviesUiState> = _uiState
 
     fun fetchMovies() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _uiState.value = MoviesUiState.Loading
             try {
                 val movies = repository.getPopularMovies()
-                _uiState.value = UiState.Success(movies)
+                _uiState.value = MoviesUiState.Success(movies)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.localizedMessage ?: "Ошибка")
+                _uiState.value = MoviesUiState.Error
             }
         }
     }
 }
-sealed class UiState<out T> {
-    object Loading: UiState<Nothing>()
-    data class Success<T>(val data: T): UiState<T>()
-    data class Error(val message: String): UiState<Nothing>()
+sealed interface MoviesUiState {
+    data class Success(val movies: List<Movie>) : MoviesUiState
+    data object Loading : MoviesUiState
+    data object Error : MoviesUiState
 }
 class MoviesViewModelFactory(
     private val repository: MoviesRepository
