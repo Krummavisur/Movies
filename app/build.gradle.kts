@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.0")
     implementation("androidx.navigation:navigation-compose:2.8.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")

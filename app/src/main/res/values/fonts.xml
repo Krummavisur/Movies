@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="com_google_android_gms_fonts_certs">
+        <item>@array/com_google_android_gms_fonts_certs_dev</item>
+    </array>
+
+    <array name="com_google_android_gms_fonts_certs_dev">
+        <item>
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArS7mBC+1TL5ovF+YxF9v
+            d+XU2eB3q5i3V2VKN1qM+yPf7Qo/N5+hShJr8ZpZbFdKX/HFhP+FCh1+oOWkNQda
+            SfdC2n1uv4xWoMztYgiDpS68v6mNQ7Ql2zCTE8Z74ZQoF3vOxl8RGFnL3QIDAQAB
+        </item>
+    </array>
+</resources>
