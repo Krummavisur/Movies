@@ -26,17 +26,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.movies.MoviesApplication
 import com.example.movies.model.Movie
 import com.example.movies.moviesList.MoviesListViewModel
 import com.example.movies.moviesList.MoviesUiState
+import com.example.movies.moviesList.MoviesViewModelFactory
 
 @Composable
-fun MovieListScreen(viewModel: MoviesListViewModel = viewModel()) {
+fun MovieListScreen() {
+    val context = LocalContext.current.applicationContext as MoviesApplication
+    val viewModel: MoviesListViewModel = viewModel(
+        factory = MoviesViewModelFactory(context.container.moviesRepository)
+    )
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
