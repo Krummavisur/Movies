@@ -1,7 +1,5 @@
 package com.example.movies.ui.screens
 
-import androidx.compose.runtime.getValue
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,18 +14,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,11 +36,14 @@ import com.example.movies.MoviesApplication
 import com.example.movies.model.Movie
 
 @Composable
-fun MovieListScreen() {
+fun MovieListScreen(
+    onMovieClick: (Int) -> Unit,
+) {
     val context = LocalContext.current.applicationContext as MoviesApplication
     val viewModel: MoviesListViewModel = viewModel(
         factory = MoviesViewModelFactory(context.container.moviesRepository)
     )
+
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -58,7 +61,7 @@ fun MovieListScreen() {
             val movies = (uiState as MoviesUiState.Success).movies
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(movies) { movie ->
-                    MovieItem(movie = movie)
+                    MovieItem(movie = movie, onClick = {onMovieClick(movie.id)})
                 }
             }
         }
@@ -71,14 +74,17 @@ fun MovieListScreen() {
     }
 }
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(
+    movie: Movie,
+    onClick: () -> Unit
+) {
     val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
 
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .clickable {}
+            .clickable {onClick()}
     ) {
         Row(
             modifier = Modifier
@@ -101,11 +107,12 @@ fun MovieItem(movie: Movie) {
                 Text(
                     text = movie.title,
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Рейтинг фильма: ${movie.rating}"
+                    text = "Рейтинг фильма: ${movie.rating}",
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }

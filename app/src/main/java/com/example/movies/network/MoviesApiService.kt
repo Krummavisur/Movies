@@ -11,5 +11,5 @@ interface MoviesApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "ru-RU",
         @Query("page") page: Int = 1
-    ): MovieResponse //можно добавить call если не заработает
+    ): MovieResponse
 }
