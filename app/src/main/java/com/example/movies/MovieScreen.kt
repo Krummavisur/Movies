@@ -2,7 +2,8 @@ package com.example.movies
 
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -78,25 +79,25 @@ fun MoviesApp(
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = spring()
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { fullWidth -> -fullWidth / 4 },
-                    animationSpec = spring()
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { fullWidth -> -fullWidth / 4 },
-                    animationSpec = spring()
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = spring()
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
                 )
             }
         ) {
