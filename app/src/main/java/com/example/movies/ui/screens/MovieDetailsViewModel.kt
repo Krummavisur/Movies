@@ -17,7 +17,7 @@ class MovieDetailsViewModel(
     private val _uiState = MutableStateFlow<Movie?>(null)
     val uiState: StateFlow<Movie?> = _uiState
 
-    init {
+    fun loadMovie() {
         viewModelScope.launch {
             moviesListViewModel.uiState.collect { state ->
                 Log.d("MovieDetailsViewModel", "MoviesListViewModel uiState changed: $state")
@@ -25,6 +25,7 @@ class MovieDetailsViewModel(
                     val movie = state.movies.find { it.id == movieId }
                     Log.d("MovieDetailsViewModel", "Found movie: $movie")
                     _uiState.value = movie
+                    return@collect
                 }
             }
         }

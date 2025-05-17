@@ -26,6 +26,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
     val movie by viewModel.uiState.collectAsState()
     LaunchedEffect(movie) {
         Log.d("MovieDetailsScreen", "Movie state changed: $movie")
+        viewModel.loadMovie()
     }
 
     if (movie != null) {
