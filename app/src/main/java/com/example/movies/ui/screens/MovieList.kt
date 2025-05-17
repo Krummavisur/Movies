@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +47,7 @@ import com.example.movies.model.Movie
 @Composable
 fun MovieListScreen(
     onMovieClick: (Int) -> Unit,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     val context = LocalContext.current.applicationContext as MoviesApplication
     val viewModel: MoviesListViewModel = viewModel(
@@ -60,7 +62,9 @@ fun MovieListScreen(
 
     when (uiState) {
         is MoviesUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize()
+                .padding(contentPadding),
+                contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
@@ -68,13 +72,14 @@ fun MovieListScreen(
         is MoviesUiState.Success -> {
             val movies = (uiState as MoviesUiState.Success).movies
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp)
+                modifier = Modifier.fillMaxSize()
+                    .clipToBounds(),
+                contentPadding = contentPadding,
             ) {
                 items(movies, key = { it.id }) { movie ->
                     MovieItem(
                         movie = movie,
-                        modifier = Modifier.animateItemPlacement(), // вот здесь магия
+                        modifier = Modifier.animateItemPlacement(),
                         onClick = { onMovieClick(movie.id) }
                     )
                 }
@@ -82,7 +87,9 @@ fun MovieListScreen(
         }
 
         is MoviesUiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize()
+                .padding(contentPadding),
+                contentAlignment = Alignment.Center) {
                 Text("Произошла ошибка", color = Color.Red)
             }
         }

@@ -1,7 +1,10 @@
 package com.example.movies
 
 import android.util.Log
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -11,15 +14,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movies.ui.screens.MovieDetailsScreen
 import com.example.movies.ui.screens.MovieDetailsViewModel
@@ -27,6 +27,8 @@ import com.example.movies.ui.screens.MovieDetailsViewModelFactory
 import com.example.movies.ui.screens.MovieListScreen
 import com.example.movies.ui.screens.MoviesListViewModel
 import com.example.movies.ui.screens.MoviesViewModelFactory
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 enum class MoviesScreen(val route: String) {
     List("movies"),
@@ -49,10 +51,10 @@ fun MoviesAppBar(title: String) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MoviesApp(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberAnimatedNavController(),
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = MoviesScreen.fromRoute(currentBackStackEntry?.destination?.route)
@@ -70,17 +72,41 @@ fun MoviesApp(
             }
         }
     ) { padding ->
-        NavHost(
+        AnimatedNavHost(
             navController = navController,
             startDestination = MoviesScreen.List.route,
-            modifier = Modifier.padding(padding)
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = spring()
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> -fullWidth / 4 }, // Чуть назад
+                    animationSpec = spring()
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> -fullWidth / 4 }, // Вернуть с левой стороны
+                    animationSpec = spring()
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = spring()
+                )
+            }
         ) {
             composable(MoviesScreen.List.route) {
                 MovieListScreen(
                     onMovieClick = { movieId ->
                         Log.d("Navigation", "Navigating to details with movieId: $movieId")
                         navController.navigate("details/${movieId}")
-                    }
+                    },
+                    contentPadding = padding
                 )
             }
             composable(
