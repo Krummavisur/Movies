@@ -1,5 +1,6 @@
 package com.example.movies.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -21,8 +22,10 @@ class MoviesListViewModel(
             _uiState.value = MoviesUiState.Loading
             try {
                 val movies = repository.getPopularMovies()
+                Log.d("MoviesListViewModel", "Fetched movies count: ${movies.size}")
                 _uiState.value = MoviesUiState.Success(movies)
             } catch (e: Exception) {
+                Log.e("MoviesListViewModel", "Error fetching movies", e)
                 _uiState.value = MoviesUiState.Error
             }
         }

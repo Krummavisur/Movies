@@ -1,5 +1,6 @@
 package com.example.movies.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,14 +22,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 
 @Composable
-fun MovieDetailsScreen(
-    viewModel: MovieDetailsViewModel) {
-
+fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
     val movie by viewModel.uiState.collectAsState()
+    LaunchedEffect(movie) {
+        Log.d("MovieDetailsScreen", "Movie state changed: $movie")
+    }
 
     if (movie != null) {
         val imageUrl = "https://image.tmdb.org/t/p/w500${movie!!.posterPath}"
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

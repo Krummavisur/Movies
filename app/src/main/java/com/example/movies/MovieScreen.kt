@@ -1,5 +1,6 @@
 package com.example.movies
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +60,9 @@ fun MoviesApp(
     val moviesListViewModel: MoviesListViewModel = viewModel (
         factory = MoviesViewModelFactory(context.container.moviesRepository)
     )
+    LaunchedEffect(Unit) {
+        moviesListViewModel.fetchMovies()
+    }
     Scaffold(
         topBar = {
             if (currentScreen == MoviesScreen.List) {
@@ -73,6 +78,7 @@ fun MoviesApp(
             composable(MoviesScreen.List.route) {
                 MovieListScreen(
                     onMovieClick = { movieId ->
+                        Log.d("Navigation", "Navigating to details with movieId: $movieId")
                         navController.navigate("details/${movieId}")
                     }
                 )
@@ -82,10 +88,11 @@ fun MoviesApp(
                 arguments = listOf(navArgument("movieId") { type = NavType.IntType }) //либо стринг либо инт
             ) { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getInt("movieId") ?: return@composable
+                Log.d("DetailsScreen", "Received movieId: $movieId")
                 val detailsViewModel: MovieDetailsViewModel = viewModel(
                     factory = MovieDetailsViewModelFactory(
-                        moviesViewModel = moviesListViewModel,
-                        movieIndex = movieId
+                        movieId = movieId,
+                        moviesViewModel = moviesListViewModel
                     )
                 )
                 MovieDetailsScreen(viewModel = detailsViewModel)
