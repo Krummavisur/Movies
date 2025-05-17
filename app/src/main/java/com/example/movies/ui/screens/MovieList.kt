@@ -1,7 +1,6 @@
 package com.example.movies.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
@@ -90,7 +90,7 @@ fun MovieListScreen(
             Box(modifier = Modifier.fillMaxSize()
                 .padding(contentPadding),
                 contentAlignment = Alignment.Center) {
-                Text("Произошла ошибка", color = Color.Red)
+                Text("Произошла ошибка", color = Color.Red, fontSize = 25.sp)
             }
         }
     }

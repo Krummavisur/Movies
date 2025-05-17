@@ -40,6 +40,6 @@ class MovieDetailsViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return MovieDetailsViewModel(moviesViewModel, movieId) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Error")
     }
 }

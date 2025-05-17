@@ -83,13 +83,13 @@ fun MoviesApp(
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> -fullWidth / 4 }, // Чуть назад
+                    targetOffsetX = { fullWidth -> -fullWidth / 4 },
                     animationSpec = spring()
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { fullWidth -> -fullWidth / 4 }, // Вернуть с левой стороны
+                    initialOffsetX = { fullWidth -> -fullWidth / 4 },
                     animationSpec = spring()
                 )
             },

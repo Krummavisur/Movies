@@ -90,7 +90,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
                 )
             }
         }
-    }else {
+    } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
