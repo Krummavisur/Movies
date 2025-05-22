@@ -4,42 +4,64 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.movies.data.MoviesRepository
+import com.example.movies.model.CastMember
 import com.example.movies.model.Movie
+import com.example.movies.model.Video
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
-    private val moviesListViewModel: MoviesListViewModel,
+    private val repository: MoviesRepository,
     private val movieId: Int
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<Movie?>(null)
-    val uiState: StateFlow<Movie?> = _uiState
+    private val _uiState = MutableStateFlow<MovieDetailsUiState?>(null)
+    val uiState: StateFlow<MovieDetailsUiState?> = _uiState
 
-    fun loadMovie() {
+
+    init {
+        Log.d("MovieDetailsViewModel", "init ViewModel with id = $movieId")
+        loadMovieDetails()
+    }
+
+    fun loadMovieDetails() {
+        Log.d("MovieDetailsViewModel", "Loading details for movie id = $movieId")
         viewModelScope.launch {
-            moviesListViewModel.uiState.collect { state ->
-                Log.d("MovieDetailsViewModel", "MoviesListViewModel uiState changed: $state")
-                if (state is MoviesUiState.Success) {
-                    val movie = state.movies.find { it.id == movieId }
-                    Log.d("MovieDetailsViewModel", "Found movie: $movie")
-                    _uiState.value = movie
-                    return@collect
-                }
+            try {
+                val movie = repository.getMovieDetails(movieId)
+                val videos = repository.getVideos(movieId)
+                val cast = repository.getCredits(movieId)
+                val trailer = videos.firstOrNull { it.type == "Trailer" && it.site == "YouTube" }
+
+                Log.d("MovieDetailsViewModel", "Loaded movie: ${movie.title}, trailer: ${trailer?.name}, cast size: ${cast.size}")
+
+                _uiState.value = MovieDetailsUiState(
+                    movie = movie,
+                    trailer = trailer,
+                    cast = cast
+                )
+            } catch (e: Exception){
+                Log.e("MovieDetailsViewModel", "Ошибка при загрузке деталей", e)
             }
         }
     }
 }
 class MovieDetailsViewModelFactory(
-    private val moviesViewModel: MoviesListViewModel,
+    private val repository: MoviesRepository,
     private val movieId: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MovieDetailsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MovieDetailsViewModel(moviesViewModel, movieId) as T
+            return MovieDetailsViewModel(repository, movieId) as T
         }
         throw IllegalArgumentException("Error")
     }
 }
+data class MovieDetailsUiState(
+    val movie: Movie,
+    val trailer: Video?,
+    val cast: List<CastMember>
+)

@@ -119,9 +119,10 @@ fun MoviesApp(
                 val detailsViewModel: MovieDetailsViewModel = viewModel(
                     factory = MovieDetailsViewModelFactory(
                         movieId = movieId,
-                        moviesViewModel = moviesListViewModel
+                        repository = context.container.moviesRepository
                     )
                 )
+
                 MovieDetailsScreen(viewModel = detailsViewModel)
             }
         }
