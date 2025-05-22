@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +41,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
 import com.example.movies.model.Movie
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -60,13 +64,20 @@ fun MovieListScreen(
 
     when (uiState) {
         is MoviesUiState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
-                contentAlignment = Alignment.Center
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                CircularProgressIndicator()
+                items(6) {
+                    MovieItemSkeleton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(2f / 3f)
+                    )
+                }
             }
         }
 
@@ -142,6 +153,54 @@ fun MovieItem(
                 text = "⭐ ${movie.rating}",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+@Composable
+fun MovieItemSkeleton(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .placeholder(
+                        visible = true,
+                        highlight = PlaceholderHighlight.shimmer(),
+                        color = Color.Gray
+                    )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .height(16.dp)
+                    .fillMaxWidth(0.7f)
+                    .placeholder(
+                        visible = true,
+                        highlight = PlaceholderHighlight.shimmer(),
+                        color = Color.Gray
+                    )
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Box(
+                modifier = Modifier
+                    .height(12.dp)
+                    .fillMaxWidth(0.4f)
+                    .placeholder(
+                        visible = true,
+                        highlight = PlaceholderHighlight.shimmer(),
+                        color = Color.Gray
+                    )
             )
         }
     }

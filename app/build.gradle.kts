@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.accompanist:accompanist-placeholder-material:0.32.0")
     implementation("androidx.compose.foundation:foundation:1.5.0")
     implementation ("com.google.accompanist:accompanist-navigation-animation:0.34.0")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.0")
