@@ -1,10 +1,8 @@
 package com.example.movies.ui.screens
 
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,39 +14,41 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
+import com.example.movies.model.Video
 
 @Composable
 fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.loadMovieDetails()
-        Log.d("MovieDetailsScreen", "uiState changed: ${uiState}")
     }
 
     if (uiState != null) {
@@ -69,7 +69,6 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Обложка
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = movie.title,
@@ -82,7 +81,6 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Название
                 Text(
                     text = movie.title,
                     style = MaterialTheme.typography.headlineSmall,
@@ -90,7 +88,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Divider()
+                HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -113,21 +111,9 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                trailer?.let {
-                    Text(
-                        text = "Смотреть трейлер",
-                        color = Color.Blue,
-                        modifier = Modifier
-                            .clickable {
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.youtube.com/watch?v=${trailer.key}")
-                                )
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                context.startActivity(intent)
-                            }
-                    )
-                }
+                TrailerButton(
+                    trailer = trailer
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -184,6 +170,36 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
         Log.d("MovieDetailsScreen", "State is null, showing loading indicator")
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
+        }
+    }
+}
+@Composable
+fun TrailerButton(trailer: Video?) {
+    val context = LocalContext.current
+
+    trailer?.let {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://www.youtube.com/watch?v=${trailer.key}".toUri()
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Blue,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Смотреть трейлер")
+            }
         }
     }
 }
