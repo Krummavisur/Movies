@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,6 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.example.movies.model.Video
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.placeholder.placeholder
 
 @Composable
 fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
@@ -167,10 +170,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
             }
         }
     } else {
-        Log.d("MovieDetailsScreen", "State is null, showing loading indicator")
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        MovieDetailsSkeleton()
     }
 }
 @Composable
@@ -201,5 +201,59 @@ fun TrailerButton(trailer: Video?) {
                 Text(text = "Смотреть трейлер")
             }
         }
+    }
+}
+@Composable
+fun MovieDetailsSkeleton(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(2f / 3f)
+                .clip(RoundedCornerShape(12.dp))
+                .placeholder(
+                    visible = true,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(8.dp),
+                    highlight = PlaceholderHighlight.shimmer()
+                )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .height(24.dp)
+                .fillMaxWidth(0.7f)
+                .clip(RoundedCornerShape(4.dp))
+                .placeholder(
+                    visible = true,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(8.dp),
+                    highlight = PlaceholderHighlight.shimmer()
+                )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Box(
+            modifier = Modifier
+                .height(16.dp)
+                .fillMaxWidth(0.3f)
+                .clip(RoundedCornerShape(4.dp))
+                .placeholder(
+                    visible = true,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(8.dp),
+                    highlight = PlaceholderHighlight.shimmer()
+                )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
     }
 }
