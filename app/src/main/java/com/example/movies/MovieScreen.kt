@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,8 +25,6 @@ import com.example.movies.ui.screens.MovieDetailsScreen
 import com.example.movies.ui.screens.MovieDetailsViewModel
 import com.example.movies.ui.screens.MovieDetailsViewModelFactory
 import com.example.movies.ui.screens.MovieListScreen
-import com.example.movies.ui.screens.MoviesListViewModel
-import com.example.movies.ui.screens.MoviesViewModelFactory
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -60,12 +57,6 @@ fun MoviesApp(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = MoviesScreen.fromRoute(currentBackStackEntry?.destination?.route)
     val context = LocalContext.current.applicationContext as MoviesApplication
-    val moviesListViewModel: MoviesListViewModel = viewModel (
-        factory = MoviesViewModelFactory(context.container.moviesRepository)
-    )
-    LaunchedEffect(Unit) {
-        moviesListViewModel.fetchMovies()
-    }
     Scaffold(
         topBar = {
             if (currentScreen == MoviesScreen.List) {

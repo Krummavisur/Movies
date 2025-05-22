@@ -131,7 +131,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel) {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.width(100.dp)
                             ) {
-                                val profileUrl = actor.profile_path?.let {
+                                val profileUrl = actor.profilePath?.let {
                                     "https://image.tmdb.org/t/p/w200$it"
                                 }
 

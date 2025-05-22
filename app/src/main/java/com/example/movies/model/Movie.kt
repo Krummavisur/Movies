@@ -33,8 +33,8 @@ data class CreditsResponse(
 )
 
 data class CastMember(
-    val cast_id: Int,
+    @SerializedName("cast_id") val castId: Int,
     val character: String,
     val name: String,
-    val profile_path: String?
+    @SerializedName("profile_path") val profilePath: String?
 )
