@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,6 +61,7 @@ fun MovieListScreen(
     val favoritesViewModel: FavoritesViewModel = viewModel(
         factory = FavoritesViewModelFactory(context.container.moviesRepository)
     )
+    val favoriteIds by favoritesViewModel.favoriteIds.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -98,7 +98,7 @@ fun MovieListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(movies, key = { it.id }) { movie ->
-                    val isFavorite by favoritesViewModel.isFavorite(movie.id).collectAsState()
+                    val isFavorite = favoriteIds.contains(movie.id)
                     MovieItem(
                         movie = movie,
                         onClick = { onMovieClick(movie.id) },
@@ -174,7 +174,6 @@ fun MovieItem(
                 onClick = onFavoriteClick,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(4.dp)
             ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,

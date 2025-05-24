@@ -12,17 +12,19 @@ class FavoritesViewModel(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
-    val favorites: StateFlow<List<FavoriteMovie>> =
+    private val _favorites: StateFlow<List<FavoriteMovie>> =
         repository.getAllFavorites()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun isFavorite(movieId: Int): StateFlow<Boolean> {
-        return repository.isFavorite(movieId)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    }
+    val favorites: StateFlow<List<FavoriteMovie>> = _favorites
+
+    val favoriteIds: StateFlow<Set<Int>> = _favorites
+        .map { it.map { movie -> movie.id }.toSet() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
+
     fun toggleFavorite(movie: Movie) {
         viewModelScope.launch {
-            if (isFavorite(movie.id).value) {
+            if (favoriteIds.value.contains(movie.id)) {
                 removeFromFavorites(movie)
             } else {
                 addToFavorites(movie)
@@ -30,28 +32,26 @@ class FavoritesViewModel(
         }
     }
 
-    fun addToFavorites(movie: Movie) {
-        viewModelScope.launch {
-            val favorite = FavoriteMovie(
+    private suspend fun addToFavorites(movie: Movie) {
+        repository.addFavorite(
+            FavoriteMovie(
                 id = movie.id,
                 title = movie.title,
                 posterPath = movie.posterPath ?: "",
                 rating = movie.rating
             )
-            repository.addFavorite(favorite)
-        }
+        )
     }
 
-    fun removeFromFavorites(movie: Movie) {
-        viewModelScope.launch {
-            val favorite = FavoriteMovie(
+    private suspend fun removeFromFavorites(movie: Movie) {
+        repository.removeFavorite(
+            FavoriteMovie(
                 id = movie.id,
                 title = movie.title,
                 posterPath = movie.posterPath ?: "",
                 rating = movie.rating
             )
-            repository.removeFavorite(favorite)
-        }
+        )
     }
 }
 class FavoritesViewModelFactory(
