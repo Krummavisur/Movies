@@ -16,17 +16,21 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,13 +53,15 @@ import com.google.accompanist.placeholder.material.shimmer
 @Composable
 fun MovieListScreen(
     onMovieClick: (Int) -> Unit,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     val context = LocalContext.current.applicationContext as MoviesApplication
     val viewModel: MoviesListViewModel = viewModel(
         factory = MoviesViewModelFactory(context.container.moviesRepository)
     )
-
+    val favoritesViewModel: FavoritesViewModel = viewModel(
+        factory = FavoritesViewModelFactory(context.container.moviesRepository)
+    )
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -92,9 +98,12 @@ fun MovieListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(movies, key = { it.id }) { movie ->
+                    val isFavorite by favoritesViewModel.isFavorite(movie.id).collectAsState()
                     MovieItem(
                         movie = movie,
-                        onClick = { onMovieClick(movie.id) }
+                        onClick = { onMovieClick(movie.id) },
+                        onFavoriteClick = {favoritesViewModel.toggleFavorite(movie)},
+                        isFavorite = isFavorite
                     )
                 }
             }
@@ -116,6 +125,8 @@ fun MovieListScreen(
 fun MovieItem(
     movie: Movie,
     onClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    isFavorite: Boolean
 ) {
     val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
 
@@ -126,34 +137,51 @@ fun MovieItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = movie.title,
-                contentScale = ContentScale.Crop,
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f / 3f)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = movie.title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.height(40.dp)
+                )
+                Text(
+                    text = "⭐ ${movie.rating}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            IconButton(
+                onClick = onFavoriteClick,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2f / 3f)
-                    .clip(RoundedCornerShape(12.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = movie.title,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.height(40.dp)
-            )
-            Text(
-                text = "⭐ ${movie.rating}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Избранное",
+                    tint = if (isFavorite) Color.Red else Color.Gray
+                )
+            }
         }
     }
 }

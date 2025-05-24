@@ -20,6 +20,15 @@ class FavoritesViewModel(
         return repository.isFavorite(movieId)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
     }
+    fun toggleFavorite(movie: Movie) {
+        viewModelScope.launch {
+            if (isFavorite(movie.id).value) {
+                removeFromFavorites(movie)
+            } else {
+                addToFavorites(movie)
+            }
+        }
+    }
 
     fun addToFavorites(movie: Movie) {
         viewModelScope.launch {
