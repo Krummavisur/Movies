@@ -18,6 +18,9 @@ class FavoritesViewModel(
 
     val favorites: StateFlow<List<FavoriteMovie>> = _favorites
 
+    private val _uiState = MutableStateFlow<FavoriteMoviesUiState>(FavoriteMoviesUiState.Loading)
+    val uiState: StateFlow<FavoriteMoviesUiState> = _uiState
+
     val favoriteIds: StateFlow<Set<Int>> = _favorites
         .map { it.map { movie -> movie.id }.toSet() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
@@ -53,6 +56,11 @@ class FavoritesViewModel(
             )
         )
     }
+}
+sealed interface FavoriteMoviesUiState {
+    data class Success(val movies: List<FavoriteMovie>) : FavoriteMoviesUiState
+    data object Loading : FavoriteMoviesUiState
+    data object Error : FavoriteMoviesUiState
 }
 class FavoritesViewModelFactory(
     private val repository: MoviesRepository
