@@ -25,7 +25,7 @@ import com.example.movies.MoviesApplication
 import com.example.movies.model.Movie
 
 @Composable
-fun ListFavorites(
+fun ListFavoritesScreen(
     onMovieClick: (Int) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {

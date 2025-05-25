@@ -68,10 +68,6 @@ fun MovieDetailsScreen(
     val favoriteIds by favoritesViewModel.favoriteIds.collectAsState()
 
 
-    LaunchedEffect(Unit) {
-        viewModel.loadMovieDetails()
-    }
-
     if (uiState != null) {
         Log.d("MovieDetailsScreen", "Displaying screen for movie: ${uiState!!.movie.title}")
         val movie = uiState!!.movie
