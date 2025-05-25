@@ -27,7 +27,7 @@ import com.example.movies.model.Movie
 @Composable
 fun ListFavoritesScreen(
     onMovieClick: (Int) -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     val context = LocalContext.current.applicationContext as MoviesApplication
     val favoritesViewModel: FavoritesViewModel = viewModel(
@@ -55,9 +55,8 @@ fun ListFavoritesScreen(
                 }
             }
         }
-
         is FavoriteMoviesUiState.Success -> {
-           // val movies = (uiState as FavoriteMoviesUiState.Success).movies //Вероятно_нужно_заменить_объявить как_favoriteMovies
+           // val movies = (uiState as FavoriteMoviesUiState.Success).movies //Вероятно_нужно_объявить как_favoriteMovies
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 modifier = Modifier

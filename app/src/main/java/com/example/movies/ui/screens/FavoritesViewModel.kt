@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    private val repository: MoviesRepository
+private val repository: MoviesRepository
 ) : ViewModel() {
 
     private val _favorites: StateFlow<List<FavoriteMovie>> =
@@ -25,6 +25,13 @@ class FavoritesViewModel(
         .map { it.map { movie -> movie.id }.toSet() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
 
+    init {
+        viewModelScope.launch {
+            favorites.collect { list ->
+                _uiState.value = FavoriteMoviesUiState.Success(list)
+            }
+        }
+    }
     fun toggleFavorite(movie: Movie) {
         viewModelScope.launch {
             if (favoriteIds.value.contains(movie.id)) {

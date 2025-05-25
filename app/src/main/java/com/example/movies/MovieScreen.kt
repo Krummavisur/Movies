@@ -1,6 +1,5 @@
 package com.example.movies
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -146,7 +145,6 @@ fun MoviesApp(
             composable(MoviesScreen.List.route) {
                 MovieListScreen(
                     onMovieClick = { movieId ->
-                        Log.d("Navigation", "Navigating to details with movieId: $movieId")
                         navController.navigate("details/${movieId}")
                     },
                     contentPadding = padding
@@ -157,7 +155,6 @@ fun MoviesApp(
                 arguments = listOf(navArgument("movieId") { type = NavType.IntType })
             ) { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getInt("movieId") ?: return@composable
-                Log.d("DetailsScreen", "Received movieId: $movieId")
                 val detailsViewModel: MovieDetailsViewModel = viewModel(
                     factory = MovieDetailsViewModelFactory(
                         movieId = movieId,
@@ -171,7 +168,7 @@ fun MoviesApp(
                 ListFavoritesScreen(
                     onMovieClick = { movieId ->
                         navController.navigate("details/$movieId")
-                    }
+                    }, contentPadding = padding
                 )
             }
         }

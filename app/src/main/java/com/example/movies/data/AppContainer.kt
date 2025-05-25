@@ -35,6 +35,6 @@ class DefaultAppContainer(application: Application): AppContainer {
         appDatabase.favoriteMovieDao()
     }
     override val moviesRepository: MoviesRepository by lazy {
-        NetworkMoviesRepository(retrofitService, favoriteMovie) //вероятно_нужно_будет_передать FavoriteMoviesDao
+        NetworkMoviesRepository(retrofitService, favoriteMovie)
     }
 }

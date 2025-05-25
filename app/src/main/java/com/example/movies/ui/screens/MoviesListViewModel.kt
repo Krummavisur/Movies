@@ -17,12 +17,14 @@ class MoviesListViewModel(
     private val _uiState = MutableStateFlow<MoviesUiState>(MoviesUiState.Loading)
     val uiState: StateFlow<MoviesUiState> = _uiState
 
+    init {
+        fetchMovies()
+    }
     fun fetchMovies() {
         viewModelScope.launch {
             _uiState.value = MoviesUiState.Loading
             try {
                 val movies = repository.getPopularMovies()
-                Log.d("MoviesListViewModel", "Fetched movies count: ${movies.size}")
                 _uiState.value = MoviesUiState.Success(movies)
             } catch (e: Exception) {
                 Log.e("MoviesListViewModel", "Error fetching movies", e)

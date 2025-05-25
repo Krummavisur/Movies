@@ -1,7 +1,6 @@
 package com.example.movies.ui.screens
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -49,12 +47,10 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
-import com.example.movies.data.local.FavoriteMovie
 import com.example.movies.model.Video
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.placeholder.placeholder
-import kotlinx.serialization.builtins.serializer
 
 @Composable
 fun MovieDetailsScreen(
@@ -67,9 +63,7 @@ fun MovieDetailsScreen(
     )
     val favoriteIds by favoritesViewModel.favoriteIds.collectAsState()
 
-
     if (uiState != null) {
-        Log.d("MovieDetailsScreen", "Displaying screen for movie: ${uiState!!.movie.title}")
         val movie = uiState!!.movie
         val trailer = uiState!!.trailer
         val cast = uiState!!.cast

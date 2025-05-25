@@ -20,22 +20,17 @@ class MovieDetailsViewModel(
     private val _uiState = MutableStateFlow<MovieDetailsUiState?>(null)
     val uiState: StateFlow<MovieDetailsUiState?> = _uiState
 
-
     init {
-        Log.d("MovieDetailsViewModel", "init ViewModel with id = $movieId")
         loadMovieDetails()
     }
 
     fun loadMovieDetails() {
-        Log.d("MovieDetailsViewModel", "Loading details for movie id = $movieId")
         viewModelScope.launch {
             try {
                 val movie = repository.getMovieDetails(movieId)
                 val videos = repository.getVideos(movieId)
                 val cast = repository.getCredits(movieId)
                 val trailer = videos.firstOrNull { it.type == "Trailer" && it.site == "YouTube" }
-
-                Log.d("MovieDetailsViewModel", "Loaded movie: ${movie.title}, trailer: ${trailer?.name}, cast size: ${cast.size}")
 
                 _uiState.value = MovieDetailsUiState(
                     movie = movie,
