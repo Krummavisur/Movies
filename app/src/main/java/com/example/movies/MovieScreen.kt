@@ -26,11 +26,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.example.movies.ui.screens.ListFavoritesScreen
-import com.example.movies.ui.screens.MovieDetailsScreen
-import com.example.movies.ui.screens.MovieDetailsViewModel
-import com.example.movies.ui.screens.MovieDetailsViewModelFactory
-import com.example.movies.ui.screens.MovieListScreen
+import com.example.movies.ui.screens.favorites.FavoritesListScreen
+import com.example.movies.ui.screens.details.MovieDetailsScreen
+import com.example.movies.ui.screens.details.MovieDetailsViewModel
+import com.example.movies.ui.screens.details.MovieDetailsViewModelFactory
+import com.example.movies.ui.screens.list.MovieListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -165,7 +165,7 @@ fun MoviesApp(
                 MovieDetailsScreen(viewModel = detailsViewModel)
             }
             composable(MoviesScreen.Favorites.route) {
-                ListFavoritesScreen(
+                FavoritesListScreen(
                     onMovieClick = { movieId ->
                         navController.navigate("details/$movieId")
                     }, contentPadding = padding

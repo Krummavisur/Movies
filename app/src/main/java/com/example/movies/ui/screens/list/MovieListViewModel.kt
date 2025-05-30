@@ -1,16 +1,14 @@
-package com.example.movies.ui.screens
+package com.example.movies.ui.screens.list
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.movies.data.MoviesRepository
-import com.example.movies.model.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MoviesListViewModel(
+class MovieListViewModel(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
@@ -31,17 +29,5 @@ class MoviesListViewModel(
                 _uiState.value = MoviesUiState.Error
             }
         }
-    }
-}
-sealed interface MoviesUiState {
-    data class Success(val movies: List<Movie>) : MoviesUiState
-    data object Loading : MoviesUiState
-    data object Error : MoviesUiState
-}
-class MoviesViewModelFactory(
-    private val repository: MoviesRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MoviesListViewModel(repository) as T
     }
 }

@@ -1,4 +1,4 @@
-package com.example.movies.ui.screens
+package com.example.movies.ui.screens.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
-import com.example.movies.model.Movie
+import com.example.movies.data.remote.MovieDto
+import com.example.movies.ui.screens.favorites.FavoritesViewModel
+import com.example.movies.ui.screens.favorites.FavoritesViewModelFactory
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -54,7 +56,7 @@ fun MovieListScreen(
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val context = LocalContext.current.applicationContext as MoviesApplication
-    val viewModel: MoviesListViewModel = viewModel(
+    val viewModel: MovieListViewModel = viewModel(
         factory = MoviesViewModelFactory(context.container.moviesRepository)
     )
     val favoritesViewModel: FavoritesViewModel = viewModel(
@@ -118,7 +120,7 @@ fun MovieListScreen(
 }
 @Composable
 fun MovieItem(
-    movie: Movie,
+    movie: MovieDto,
     onClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     isFavorite: Boolean

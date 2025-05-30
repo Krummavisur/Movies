@@ -1,4 +1,4 @@
-package com.example.movies.ui.screens
+package com.example.movies.ui.screens.details
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -47,7 +47,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
-import com.example.movies.model.Video
+import com.example.movies.data.remote.VideoDto
+import com.example.movies.ui.screens.favorites.FavoritesViewModel
+import com.example.movies.ui.screens.favorites.FavoritesViewModelFactory
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.placeholder.placeholder
@@ -193,7 +195,7 @@ fun MovieDetailsScreen(
     }
 }
 @Composable
-fun TrailerButton(trailer: Video?) {
+fun TrailerButton(trailer: VideoDto?) {
     val context = LocalContext.current
 
     trailer?.let {

@@ -1,4 +1,4 @@
-package com.example.movies.ui.screens
+package com.example.movies.ui.screens.favorites
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movies.MoviesApplication
-import com.example.movies.model.Movie
+import com.example.movies.data.remote.MovieDto
+import com.example.movies.ui.screens.list.MovieItem
+import com.example.movies.ui.screens.list.MovieItemSkeleton
 
 @Composable
-fun ListFavoritesScreen(
+fun FavoritesListScreen(
     onMovieClick: (Int) -> Unit,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -66,7 +68,7 @@ fun ListFavoritesScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(favoriteMovies, key = { it.id }) { favoriteMovie ->
-                    val movieConverted = Movie(
+                    val movieConverted = MovieDto(
                         id = favoriteMovie.id,
                         title = favoriteMovie.title,
                         posterPath = favoriteMovie.posterPath,
