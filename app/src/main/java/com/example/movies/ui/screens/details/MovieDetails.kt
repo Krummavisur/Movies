@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +57,8 @@ import com.google.accompanist.placeholder.placeholder
 
 @Composable
 fun MovieDetailsScreen(
-    viewModel: MovieDetailsViewModel
+    viewModel: MovieDetailsViewModel,
+    contentPadding: PaddingValues = PaddingValues()
     ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current.applicationContext as MoviesApplication
@@ -80,6 +82,7 @@ fun MovieDetailsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(contentPadding)
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {

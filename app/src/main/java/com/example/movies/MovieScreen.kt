@@ -110,7 +110,15 @@ fun MoviesApp(
                         onFavoritesClick = {}
                     )
                 }
-                else -> {}
+                MoviesScreen.Details -> {
+                    MoviesAppBar(
+                        title = "",
+                        showBackButton = true,
+                        showFavoritesButton = false,
+                        onBackClick = {navController.popBackStack()},
+                        onFavoritesClick = {}
+                    )
+                }
             }
         }
     ) { padding ->
@@ -161,8 +169,8 @@ fun MoviesApp(
                         repository = context.container.moviesRepository
                     )
                 )
-
-                MovieDetailsScreen(viewModel = detailsViewModel)
+                MovieDetailsScreen(viewModel = detailsViewModel,
+                    contentPadding = padding)
             }
             composable(MoviesScreen.Favorites.route) {
                 FavoritesListScreen(

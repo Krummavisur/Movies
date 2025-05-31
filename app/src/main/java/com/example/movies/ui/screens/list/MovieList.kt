@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -38,8 +37,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
 import com.example.movies.domain.Movie
@@ -63,57 +62,31 @@ fun MovieListScreen(
         factory = FavoritesViewModelFactory(context.container.moviesRepository)
     )
     val favoriteIds by favoritesViewModel.favoriteIds.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
+    val movies = viewModel.moviesPagingFlow.collectAsLazyPagingItems()
 
-    when (uiState) {
-        is MovieListUiState.Loading -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = contentPadding,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(6) {
-                    MovieItemSkeleton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(2f / 3f)
-                    )
-                }
-            }
-        }
-
-        is MovieListUiState.Success -> {
-            val movies = (uiState as MovieListUiState.Success).movies
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(160.dp),
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = contentPadding,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(movies, key = { it.id }) { movie ->
-                    val isFavorite = favoriteIds.contains(movie.id)
-                    MovieItem(
-                        movie = movie,
-                        onClick = { onMovieClick(movie.id) },
-                        onFavoriteClick = {favoritesViewModel.toggleFavorite(movie)},
-                        isFavorite = isFavorite
-                    )
-                }
-            }
-        }
-
-        is MovieListUiState.Error -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Произошла ошибка", color = Color.Red, fontSize = 25.sp)
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(160.dp),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(movies.itemCount) { index ->
+            val movie = movies[index]
+            if (movie != null) {
+                val isFavorite = favoriteIds.contains(movie.id)
+                MovieItem(
+                    movie = movie,
+                    onClick = { onMovieClick(movie.id) },
+                    onFavoriteClick = { favoritesViewModel.toggleFavorite(movie) },
+                    isFavorite = isFavorite
+                )
+            } else {
+                MovieItemSkeleton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f / 3f)
+                )
             }
         }
     }
