@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movies.data.MoviesRepository
+import com.example.movies.data.mapper.toDomain
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,9 +30,9 @@ class MovieDetailsViewModel(
                 val trailer = videos.firstOrNull { it.type == "Trailer" && it.site == "YouTube" }
 
                 _uiState.value = MovieDetailsUiState(
-                    movie = movie,
-                    trailer = trailer,
-                    cast = cast
+                    movie = movie.toDomain(),
+                    trailer = trailer?.toDomain(),
+                    cast = cast.map { it.toDomain() }
                 )
             } catch (e: Exception){
                 Log.e("MovieDetailsViewModel", "Ошибка при загрузке деталей", e)

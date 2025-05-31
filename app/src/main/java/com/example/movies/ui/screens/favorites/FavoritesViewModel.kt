@@ -3,7 +3,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movies.data.MoviesRepository
 import com.example.movies.data.local.FavoriteMovieEntity
-import com.example.movies.data.remote.MovieDto
+import com.example.movies.domain.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,11 +15,11 @@ class FavoritesViewModel(
 private val repository: MoviesRepository
 ) : ViewModel() {
 
-    private val _favorites: StateFlow<List<FavoriteMovieEntity>> =
+    private val _favorites: StateFlow<List<Movie>> =
         repository.getAllFavorites()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val favorites: StateFlow<List<FavoriteMovieEntity>> = _favorites
+    val favorites: StateFlow<List<Movie>> = _favorites
 
     private val _uiState = MutableStateFlow<FavoriteMoviesUiState>(FavoriteMoviesUiState.Loading)
     val uiState: StateFlow<FavoriteMoviesUiState> = _uiState
@@ -35,7 +35,7 @@ private val repository: MoviesRepository
             }
         }
     }
-    fun toggleFavorite(movie: MovieDto) {
+    fun toggleFavorite(movie: Movie) {
         viewModelScope.launch {
             if (favoriteIds.value.contains(movie.id)) {
                 removeFromFavorites(movie)
@@ -45,7 +45,7 @@ private val repository: MoviesRepository
         }
     }
 
-    private suspend fun addToFavorites(movie: MovieDto) {
+    private suspend fun addToFavorites(movie: Movie) {
         repository.addFavorite(
             FavoriteMovieEntity(
                 id = movie.id,
@@ -56,7 +56,7 @@ private val repository: MoviesRepository
         )
     }
 
-    private suspend fun removeFromFavorites(movie: MovieDto) {
+    private suspend fun removeFromFavorites(movie: Movie) {
         repository.removeFavorite(
             FavoriteMovieEntity(
                 id = movie.id,

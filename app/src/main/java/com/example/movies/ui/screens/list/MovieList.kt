@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
-import com.example.movies.data.remote.MovieDto
+import com.example.movies.domain.Movie
 import com.example.movies.ui.screens.favorites.FavoritesViewModel
 import com.example.movies.ui.screens.favorites.FavoritesViewModelFactory
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -66,7 +66,7 @@ fun MovieListScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     when (uiState) {
-        is MoviesUiState.Loading -> {
+        is MoviesListUiState.Loading -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -84,8 +84,8 @@ fun MovieListScreen(
             }
         }
 
-        is MoviesUiState.Success -> {
-            val movies = (uiState as MoviesUiState.Success).movies
+        is MoviesListUiState.Success -> {
+            val movies = (uiState as MoviesListUiState.Success).movies
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 modifier = Modifier
@@ -106,7 +106,7 @@ fun MovieListScreen(
             }
         }
 
-        is MoviesUiState.Error -> {
+        is MoviesListUiState.Error -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -120,7 +120,7 @@ fun MovieListScreen(
 }
 @Composable
 fun MovieItem(
-    movie: MovieDto,
+    movie: Movie,
     onClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     isFavorite: Boolean

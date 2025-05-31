@@ -11,16 +11,12 @@ fun MovieDto.toDomain(): Movie = Movie(
     rating = rating,
     overview = overview
 )
-fun Movie.toEntity(): FavoriteMovieEntity = FavoriteMovieEntity(
-    id = id,
-    title = title,
-    posterPath = posterPath ?: "",
-    rating = rating,
-)
-fun FavoriteMovieEntity.toDomain(): Movie = Movie(
+fun FavoriteMovieEntity.toDomain(): Movie {
+    return Movie(
     id = id,
     title = title,
     posterPath = posterPath,
     rating = rating,
     overview = ""
-)
+    )
+}

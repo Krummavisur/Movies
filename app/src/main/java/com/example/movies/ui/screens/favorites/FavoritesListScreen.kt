@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movies.MoviesApplication
-import com.example.movies.data.remote.MovieDto
 import com.example.movies.ui.screens.list.MovieItem
 import com.example.movies.ui.screens.list.MovieItemSkeleton
 
@@ -58,7 +57,6 @@ fun FavoritesListScreen(
             }
         }
         is FavoriteMoviesUiState.Success -> {
-           // val movies = (uiState as FavoriteMoviesUiState.Success).movies //Вероятно_нужно_объявить как_favoriteMovies
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 modifier = Modifier
@@ -68,18 +66,11 @@ fun FavoritesListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(favoriteMovies, key = { it.id }) { favoriteMovie ->
-                    val movieConverted = MovieDto(
-                        id = favoriteMovie.id,
-                        title = favoriteMovie.title,
-                        posterPath = favoriteMovie.posterPath,
-                        rating = favoriteMovie.rating,
-                        overview = ""
-                    )
                     val isFavorite = favoriteIds.contains(favoriteMovie.id)
                     MovieItem(
-                        movie = movieConverted,
+                        movie = favoriteMovie,
                         onClick = { onMovieClick(favoriteMovie.id) },
-                        onFavoriteClick = { favoritesViewModel.toggleFavorite(movieConverted) },
+                        onFavoriteClick = { favoritesViewModel.toggleFavorite(favoriteMovie) },
                         isFavorite = isFavorite
                     )
                 }

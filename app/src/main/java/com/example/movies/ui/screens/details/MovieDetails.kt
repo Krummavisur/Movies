@@ -47,7 +47,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movies.MoviesApplication
-import com.example.movies.data.remote.VideoDto
+import com.example.movies.domain.Video
 import com.example.movies.ui.screens.favorites.FavoritesViewModel
 import com.example.movies.ui.screens.favorites.FavoritesViewModelFactory
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -195,7 +195,7 @@ fun MovieDetailsScreen(
     }
 }
 @Composable
-fun TrailerButton(trailer: VideoDto?) {
+fun TrailerButton(trailer: Video?) {
     val context = LocalContext.current
 
     trailer?.let {

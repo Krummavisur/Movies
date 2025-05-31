@@ -12,21 +12,21 @@ class MovieListViewModel(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MoviesUiState>(MoviesUiState.Loading)
-    val uiState: StateFlow<MoviesUiState> = _uiState
+    private val _uiState = MutableStateFlow<MoviesListUiState>(MoviesListUiState.Loading)
+    val uiState: StateFlow<MoviesListUiState> = _uiState
 
     init {
         fetchMovies()
     }
     fun fetchMovies() {
         viewModelScope.launch {
-            _uiState.value = MoviesUiState.Loading
+            _uiState.value = MoviesListUiState.Loading
             try {
                 val movies = repository.getPopularMovies()
-                _uiState.value = MoviesUiState.Success(movies)
+                _uiState.value = MoviesListUiState.Success(movies)
             } catch (e: Exception) {
                 Log.e("MoviesListViewModel", "Error fetching movies", e)
-                _uiState.value = MoviesUiState.Error
+                _uiState.value = MoviesListUiState.Error
             }
         }
     }

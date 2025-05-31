@@ -1,11 +1,11 @@
 package com.example.movies.ui.screens.details
 
-import com.example.movies.data.remote.CastMemberDto
-import com.example.movies.data.remote.MovieDto
-import com.example.movies.data.remote.VideoDto
+import com.example.movies.domain.CastMember
+import com.example.movies.domain.Movie
+import com.example.movies.domain.Video
 
 data class MovieDetailsUiState(
-    val movie: MovieDto,
-    val trailer: VideoDto?,
-    val cast: List<CastMemberDto>
+    val movie: Movie,
+    val trailer: Video?,
+    val cast: List<CastMember>
 )
