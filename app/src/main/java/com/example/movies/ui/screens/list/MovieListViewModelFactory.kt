@@ -2,9 +2,9 @@ package com.example.movies.ui.screens.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.movies.data.MoviesRepository
+import com.example.movies.data.repository.MoviesRepository
 
-class MoviesViewModelFactory(
+class MovieListViewModelFactory(
     private val repository: MoviesRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

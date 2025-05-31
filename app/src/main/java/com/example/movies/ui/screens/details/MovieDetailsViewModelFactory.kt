@@ -2,7 +2,7 @@ package com.example.movies.ui.screens.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.movies.data.MoviesRepository
+import com.example.movies.data.repository.MoviesRepository
 
 class MovieDetailsViewModelFactory(
     private val repository: MoviesRepository,

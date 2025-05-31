@@ -1,7 +1,7 @@
 package com.example.movies.ui.screens.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movies.data.MoviesRepository
+import com.example.movies.data.repository.MoviesRepository
 import com.example.movies.data.local.FavoriteMovieEntity
 import com.example.movies.domain.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +21,8 @@ private val repository: MoviesRepository
 
     val favorites: StateFlow<List<Movie>> = _favorites
 
-    private val _uiState = MutableStateFlow<FavoriteMoviesUiState>(FavoriteMoviesUiState.Loading)
-    val uiState: StateFlow<FavoriteMoviesUiState> = _uiState
+    private val _uiState = MutableStateFlow<FavoriteMovieUiState>(FavoriteMovieUiState.Loading)
+    val uiState: StateFlow<FavoriteMovieUiState> = _uiState
 
     val favoriteIds: StateFlow<Set<Int>> = _favorites
         .map { it.map { movie -> movie.id }.toSet() }
@@ -31,7 +31,7 @@ private val repository: MoviesRepository
     init {
         viewModelScope.launch {
             favorites.collect { list ->
-                _uiState.value = FavoriteMoviesUiState.Success(list)
+                _uiState.value = FavoriteMovieUiState.Success(list)
             }
         }
     }

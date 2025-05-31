@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.example.movies.data.local.AppDatabase
 import com.example.movies.data.local.FavoriteMovieDao
+import com.example.movies.data.repository.MoviesRepository
+import com.example.movies.data.repository.NetworkMoviesRepository
 import com.example.movies.network.MoviesApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

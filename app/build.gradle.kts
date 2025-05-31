@@ -47,6 +47,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-paging:$room_version")
+    implementation ("androidx.paging:paging-runtime:3.3.6")
     implementation ("androidx.paging:paging-compose:3.3.6")
     implementation ("com.google.accompanist:accompanist-placeholder-material:0.32.0")
     implementation("androidx.compose.foundation:foundation:1.5.0")

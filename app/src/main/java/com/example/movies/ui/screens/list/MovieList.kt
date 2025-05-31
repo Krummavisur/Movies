@@ -57,7 +57,7 @@ fun MovieListScreen(
 ) {
     val context = LocalContext.current.applicationContext as MoviesApplication
     val viewModel: MovieListViewModel = viewModel(
-        factory = MoviesViewModelFactory(context.container.moviesRepository)
+        factory = MovieListViewModelFactory(context.container.moviesRepository)
     )
     val favoritesViewModel: FavoritesViewModel = viewModel(
         factory = FavoritesViewModelFactory(context.container.moviesRepository)
@@ -66,7 +66,7 @@ fun MovieListScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     when (uiState) {
-        is MoviesListUiState.Loading -> {
+        is MovieListUiState.Loading -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -84,8 +84,8 @@ fun MovieListScreen(
             }
         }
 
-        is MoviesListUiState.Success -> {
-            val movies = (uiState as MoviesListUiState.Success).movies
+        is MovieListUiState.Success -> {
+            val movies = (uiState as MovieListUiState.Success).movies
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 modifier = Modifier
@@ -106,7 +106,7 @@ fun MovieListScreen(
             }
         }
 
-        is MoviesListUiState.Error -> {
+        is MovieListUiState.Error -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

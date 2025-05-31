@@ -1,11 +1,15 @@
-package com.example.movies.data
+package com.example.movies.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.movies.data.local.FavoriteMovieEntity
 import com.example.movies.data.local.FavoriteMovieDao
 import com.example.movies.data.mapper.toDomain
 import com.example.movies.data.remote.CastMemberDto
 import com.example.movies.data.remote.MovieDto
 import com.example.movies.data.remote.VideoDto
+import com.example.movies.data.remote.paging.MoviesPagingSource
 import com.example.movies.domain.Movie
 import com.example.movies.network.MoviesApiService
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +26,8 @@ interface MoviesRepository {
     suspend fun removeFavorite(movie: FavoriteMovieEntity)
     fun getAllFavorites(): Flow<List<Movie>>
     fun isFavorite(id: Int): Flow<Boolean>
+    //Paging
+    fun getPopularMoviesPaged(): Flow<PagingData<Movie>>
 }
 class NetworkMoviesRepository(
     private val apiService: MoviesApiService,
@@ -69,5 +75,15 @@ class NetworkMoviesRepository(
 
     override fun isFavorite(id: Int): Flow<Boolean> {
         return favoriteDao.isFavorite(id)
+    }
+
+    override fun getPopularMoviesPaged(): Flow<PagingData<Movie>> {
+        return  Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { MoviesPagingSource(apiService) }
+        ).flow
     }
 }
