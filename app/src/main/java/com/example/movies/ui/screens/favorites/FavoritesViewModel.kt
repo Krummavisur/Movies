@@ -21,8 +21,8 @@ private val repository: MoviesRepository
 
     val favorites: StateFlow<List<Movie>> = _favorites
 
-    private val _uiState = MutableStateFlow<FavoriteMovieUiState>(FavoriteMovieUiState.Loading)
-    val uiState: StateFlow<FavoriteMovieUiState> = _uiState
+    private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Loading)
+    val uiState: StateFlow<FavoritesUiState> = _uiState
 
     val favoriteIds: StateFlow<Set<Int>> = _favorites
         .map { it.map { movie -> movie.id }.toSet() }
@@ -31,7 +31,7 @@ private val repository: MoviesRepository
     init {
         viewModelScope.launch {
             favorites.collect { list ->
-                _uiState.value = FavoriteMovieUiState.Success(list)
+                _uiState.value = FavoritesUiState.Success(list)
             }
         }
     }

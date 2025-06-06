@@ -39,7 +39,7 @@ fun FavoritesListScreen(
     val uiState by favoritesViewModel.uiState.collectAsState()
 
     when (uiState) {
-        is FavoriteMovieUiState.Loading -> {
+        is FavoritesUiState.Loading -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -56,7 +56,7 @@ fun FavoritesListScreen(
                 }
             }
         }
-        is FavoriteMovieUiState.Success -> {
+        is FavoritesUiState.Success -> {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 modifier = Modifier
@@ -76,7 +76,7 @@ fun FavoritesListScreen(
                 }
             }
         }
-        is FavoriteMovieUiState.Error -> {
+        is FavoritesUiState.Error -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
